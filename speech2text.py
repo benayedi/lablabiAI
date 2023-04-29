@@ -70,32 +70,46 @@ body = [{
 
 request = requests.post(constructed_url, params=params, headers=headers, json=body)
 response = request.json()
+translated_text = response[0]["translations"][0]["text"]
 print ("######## translated text ###########")
-print(response[0]["translations"][0]["text"])
+print(translated_text)
 
 ##########################
 
 # set up the API endpoint URL and authentication headers
-api_url = "https://<your-resource-name>.cognitiveservices.azure.com/language/QuestionAnswering/v1.0/predict"
-api_key = "<your-api-key>"
+api_url = "https://fokzebi.cognitiveservices.azure.com/language/:query-text"
+api_key = "4caeb17bbddd400b84acc4b78e36371b"
 headers = {
     "Content-Type": "application/json",
     "Ocp-Apim-Subscription-Key": api_key
-}
+}  
 
 # define the request payload with the question and context text
-request_payload = {
-    "question": "What is the capital of France?",
-    "context": "France is a country in Western Europe. Its capital is Paris."
+params = {
+    "api-version": "2021-10-01"
 }
 
+body = {
+	"question": "when were the tasks completed?",
+	"records": [{
+        "id" :"1",
+        "text": translated_text
+        }]
+}
+print("########################")
 # make the HTTP POST request to the API endpoint with the request payload and headers
-response = requests.post(api_url, data=json.dumps(request_payload), headers=headers)
-
+request = requests.post(api_url,params=params, headers=headers, json=body)
+# print(request.text)
+response = request.json
+data = request.text
 # check if the request was successful and print the answer if available
-if response.ok:
-    result = json.loads(response.text)
-    answer = result["answers"][0]["answer"]
-    print(answer)
-else:
-    print("Error:", response.text)
+results = []
+
+for answer in data['answers']:
+    answer_span = answer['answerSpan']
+    if answer_span:
+        text = answer_span['text']
+        confidence = answer_span['confidenceScore']
+        results.append((text, confidence))
+        
+print(results)
