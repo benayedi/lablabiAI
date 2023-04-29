@@ -7,7 +7,8 @@ import numpy as np
 from io import BytesIO
 import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
-
+from reportlab.pdfgen import canvas
+from PyPDF2 import PdfFileMerger
 
 def main():
     st.title("Breaking down barriers")
@@ -43,7 +44,29 @@ def main():
     if text_input:
         st.write("You entered:", text_input)
 
+    pdf = canvas.Canvas("report.pdf")
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(100, 750, "Report")
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(100, 700, "Section 1")
+    pdf.drawString(100, 680, "Description:")
+    pdf.drawString(120, 660, text_input)
+    pdf.showPage()
+    pdf.save()
 
+   
+    # Stream generated PDF to user
+    def download_report():
+        with open("report.pdf", "rb") as f:
+            data = f.read()
+        st.download_button(
+            label="Download Report",
+            data=data,
+            file_name="report.pdf",
+            mime="application/pdf"
+    )
+
+    download_report()
 if __name__ == "__main__":
     main()
 
