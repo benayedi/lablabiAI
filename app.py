@@ -64,7 +64,7 @@ def main():
     if st.session_state.camera_enabled:
         st.write("Taking picture...")
         img_file_buffer = st.camera_input("Take a picture")
-
+    
     # Display saved image
     if st.session_state.img_file_buffer is not None:
         st.write("Saved image:")
