@@ -10,6 +10,7 @@ from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
 
+
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
@@ -42,19 +43,6 @@ def main():
         st.write("Taking picture...")
         img_file_buffer = st.camera_input("Take a picture")
 
-        # If an image was taken, display its type
-        if img_file_buffer is not None:
-            st.session_state.img_file_buffer = img_file_buffer
-            img = Image.open(img_file_buffer)
-            # To convert PIL Image to numpy array:
-            img_array = np.array(img)
-            # Check the type of img_array:
-            # Should output: <class 'numpy.ndarray'>
-            st.write(type(img_array))
-            # Check the shape of img_array:
-            # Should output shape: (height, width, channels)
-            st.write(img_array.shape)
-
     # Display saved image
     if st.session_state.img_file_buffer is not None:
         st.write("Saved image:")
@@ -86,7 +74,6 @@ def main():
     pdf.showPage()
     pdf.save()
 
-   
     # Stream generated PDF to user
     def download_report():
         with open("report.pdf", "rb") as f:
@@ -95,9 +82,11 @@ def main():
             label="Download Report",
             data=data,
             file_name="report.pdf",
-            mime="application/pdf"
-    )
+            mime="application/pdf",
+        )
 
     download_report()
+
+
 if __name__ == "__main__":
     main()
