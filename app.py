@@ -12,7 +12,7 @@ from PyPDF2 import PdfFileMerger
 
 def main():
     st.title("Breaking down barriers")
-    st.write("Welcome to my simple web app!")
+    st.write("Please create a report")
     wav_audio_data = st_audiorec()
 
     if wav_audio_data is not None:
@@ -25,14 +25,41 @@ def main():
     # Get user input
     text_input = st.text_input("Enter some text:")
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])
-    camera_input = st.button("Take a picture")
 
-    # Handle camera input
-    if camera_input:
+    # taking photo with the camera functionality:
+    # Initialize session state variables
+    if "camera_enabled" not in st.session_state:
+        st.session_state.camera_enabled = False
+    if "img_file_buffer" not in st.session_state:
+        st.session_state.img_file_buffer = None
+
+    # Add enable/disable camera button
+    if st.button("Enable/Disable Camera"):
+        st.session_state.camera_enabled = not st.session_state.camera_enabled
+
+    # Check if camera is enabled
+    if st.session_state.camera_enabled:
         st.write("Taking picture...")
-        image = st.camera_input(label="Click the camera button to take a picture")
-        if image is not None:
-            st.image(image, caption="Taken picture", use_column_width=True)
+        img_file_buffer = st.camera_input("Take a picture")
+
+        # If an image was taken, display its type
+        if img_file_buffer is not None:
+            st.session_state.img_file_buffer = img_file_buffer
+            img = Image.open(img_file_buffer)
+            # To convert PIL Image to numpy array:
+            img_array = np.array(img)
+            # Check the type of img_array:
+            # Should output: <class 'numpy.ndarray'>
+            st.write(type(img_array))
+            # Check the shape of img_array:
+            # Should output shape: (height, width, channels)
+            st.write(img_array.shape)
+
+    # Display saved image
+    if st.session_state.img_file_buffer is not None:
+        st.write("Saved image:")
+        image = Image.open(st.session_state.img_file_buffer)
+        st.image(image, caption="Saved image", use_column_width=True)
 
     # Handle file upload
     if file_input is not None:
@@ -69,4 +96,3 @@ def main():
     download_report()
 if __name__ == "__main__":
     main()
-
