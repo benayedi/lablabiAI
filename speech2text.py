@@ -103,7 +103,7 @@ def answer_question(question, context):
         if answer["answerSpan"] is not None
     ]
 
-    return answers_list [0]
+    return answers_list
 
 
 def analyze_image(url):
@@ -145,9 +145,9 @@ def analyze_image(url):
 
     # Print the resulting array
 
-    print(data)
     print(result)
     print(array)
+    return (result,array)
 
 
 # analyze_image(
