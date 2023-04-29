@@ -43,8 +43,6 @@ def main():
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
-
-
     # Get user input
     text_input = st.text_input("Enter some text:")
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])

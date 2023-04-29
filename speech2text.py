@@ -83,7 +83,10 @@ def translate_text(
 
 def answer_question(question, context):
     """Asks a question and returns the answer."""
-
+    
+    if context.strip() == "":
+        return ""
+    
     api_url = "https://fokzebi.cognitiveservices.azure.com/language/:query-text"
     api_key = "4caeb17bbddd400b84acc4b78e36371b"
 
@@ -153,4 +156,5 @@ def analyze_image(url):
 # analyze_image(
 #     "https://portal.vision.cognitive.azure.com/dist/static/media/DenseCaptioningSample0.d3cd70fb.png"
 # )
-print(translate_text("Salut. Les tâches ont été accomplies hier à 08h00 du matin.","fr"))
+
+print(answer_question("what is the task id?", ""))
