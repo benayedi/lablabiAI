@@ -10,19 +10,24 @@ from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
 import speech2text as s2t
-
+import wave 
 
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
-    wav_audio_data = st_audiorec()
-
-    if wav_audio_data is not None:
-        # display audio data as received on the backend
-        st.audio(wav_audio_data, format="audio/wav")
-    s2t.speech_to_text("fr-FR", wav_audio_data)
+    with open('output.wav', 'wb') as w:
+        
+        w.write(st_audiorec())
+        w.close()
+    speech= s2t.speech_to_text("fr-FR", "output.wav")
+    st.write(speech)
+    translatedspeech= s2t.translate_text(speech,"fr")
+    st.write(translatedspeech)
+    st.write(s2t.answer_question("when were the tasks done? give me the date in dd/mm/yyyy format",translatedspeech))
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
+
+
 
     # Get user input
     text_input = st.text_input("Enter some text:")

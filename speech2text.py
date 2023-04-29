@@ -47,6 +47,7 @@ def speech_to_text(original_text_language_format1, audio_filename):
     return original_outputText
 
 
+
 def translate_text(
     text_to_translate,
     from_language,
@@ -77,7 +78,7 @@ def translate_text(
     response_data = response.json()
     translations = [item["translations"][0]["text"] for item in response_data]
 
-    return translations
+    return translations[0]
 
 
 def answer_question(question, context):
@@ -152,5 +153,4 @@ def analyze_image(url):
 # analyze_image(
 #     "https://portal.vision.cognitive.azure.com/dist/static/media/DenseCaptioningSample0.d3cd70fb.png"
 # )
-
-print(speech_to_text('fr-FR'))
+print(translate_text("Salut. Les tâches ont été accomplies hier à 08h00 du matin.","fr"))
