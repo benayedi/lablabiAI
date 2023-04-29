@@ -25,27 +25,40 @@ def main():
     text_input = st.text_input("Enter some text:")
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])
 
+    # taking photo with the camera functionality:
+    # Initialize session state variables
+    if "camera_enabled" not in st.session_state:
+        st.session_state.camera_enabled = False
+    if "img_file_buffer" not in st.session_state:
+        st.session_state.img_file_buffer = None
 
-    camera_input = st.button("Open camera")
-    img_file_buffer = None
+    # Add enable/disable camera button
+    if st.button("Enable/Disable Camera"):
+        st.session_state.camera_enabled = not st.session_state.camera_enabled
 
-    # Handle camera input
-    #if camera_input:
-    st.write("Taking picture...")
-    img_file_buffer = st.camera_input("Take a picture")
+    # Check if camera is enabled
+    if st.session_state.camera_enabled:
+        st.write("Taking picture...")
+        img_file_buffer = st.camera_input("Take a picture")
 
-    # If an image was taken, display its type
-    if img_file_buffer is not None:
-        bytes_data = img_file_buffer.getvalue()
-        st.write(type(bytes_data))
-    else: 
-        st.write("none")
+        # If an image was taken, display its type
+        if img_file_buffer is not None:
+            st.session_state.img_file_buffer = img_file_buffer
+            img = Image.open(img_file_buffer)
+            # To convert PIL Image to numpy array:
+            img_array = np.array(img)
+            # Check the type of img_array:
+            # Should output: <class 'numpy.ndarray'>
+            st.write(type(img_array))
+            # Check the shape of img_array:
+            # Should output shape: (height, width, channels)
+            st.write(img_array.shape)
 
-
-
-
-
-   
+    # Display saved image
+    if st.session_state.img_file_buffer is not None:
+        st.write("Saved image:")
+        image = Image.open(st.session_state.img_file_buffer)
+        st.image(image, caption="Saved image", use_column_width=True)
 
     # Handle file upload
     if file_input is not None:
@@ -60,4 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
