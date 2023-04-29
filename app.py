@@ -9,6 +9,8 @@ import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
+import base64
+from PIL import Image
 
 
 def main():
@@ -45,9 +47,23 @@ def main():
 
     # Display saved image
     if st.session_state.img_file_buffer is not None:
-        st.write("Saved image:")
-        image = Image.open(st.session_state.img_file_buffer)
-        st.image(image, caption="Saved image", use_column_width=True)
+        # Convert image to byte stream
+        img_bytes = BytesIO(img_file_buffer.getvalue())
+
+        # Open image using PIL
+        img = Image.open(img_bytes)
+
+        # Encode image bytes using Base64 encoding
+        img_base64 = base64.b64encode(img_bytes.getvalue()).decode()
+
+        # Generate URL from Base64 encoded image
+        img_url = f"data:image/jpeg;base64,{img_base64}"
+        # Display image using URL
+        st.image(img_url, caption='Captured Image', use_column_width=True)
+        #st.write("Saved image:")
+        #image = Image.open(st.session_state.img_file_buffer)
+        #st.image(image, caption="Saved image", use_column_width=True)
+        
 
     # Handle file upload
     if file_input is not None:
