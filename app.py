@@ -9,21 +9,41 @@ import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
-import base64
-from PIL import Image
-
+import speech2text as s2t
+import wave 
 
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
-    wav_audio_data = st_audiorec()
+    with open('output.wav', 'wb') as w:
+        
+        w.write(st_audiorec())
+        w.close()
+    speech= s2t.speech_to_text("fr-FR", "output.wav")
+    st.write(speech)
+    translatedspeech= s2t.translate_text(speech,"fr")
+    st.write(translatedspeech)
+    q_name = "what is the name of the speaker?"
+    q_location = "where was the task done?"
+    q_task_name = "what is the name of the task?"
+    q_task_id = "what is the task id?"
+    q_finished  = "was the task finished successfully?"
 
-    if wav_audio_data is not None:
-        # display audio data as received on the backend
-        st.audio(wav_audio_data, format="audio/wav")
+    q_process = "what is the process of the task?"
 
+
+    questions = [q_name, q_location, q_task_name, q_task_id, q_finished, q_process]
+    answers = dict()
+
+    for question in questions :
+        answers[question] = s2t.answer_question(question, translatedspeech)
+
+    for k,v in answers.items():
+        st.write("{} : {}".format(k , v))
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
+
+
 
     # Get user input
     text_input = st.text_input("Enter some text:")
@@ -47,23 +67,9 @@ def main():
 
     # Display saved image
     if st.session_state.img_file_buffer is not None:
-        # Convert image to byte stream
-        img_bytes = BytesIO(img_file_buffer.getvalue())
-
-        # Open image using PIL
-        img = Image.open(img_bytes)
-
-        # Encode image bytes using Base64 encoding
-        img_base64 = base64.b64encode(img_bytes.getvalue()).decode()
-
-        # Generate URL from Base64 encoded image
-        img_url = f"data:image/jpeg;base64,{img_base64}"
-        # Display image using URL
-        st.image(img_url, caption='Captured Image', use_column_width=True)
-        #st.write("Saved image:")
-        #image = Image.open(st.session_state.img_file_buffer)
-        #st.image(image, caption="Saved image", use_column_width=True)
-        
+        st.write("Saved image:")
+        image = Image.open(st.session_state.img_file_buffer)
+        st.image(image, caption="Saved image", use_column_width=True)
 
     # Handle file upload
     if file_input is not None:
