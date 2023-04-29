@@ -103,7 +103,7 @@ def answer_question(question, context):
         if answer["answerSpan"] is not None
     ]
 
-    return answers_list
+    return answers_list[0][0]
 
 
 def analyze_image(image_path):
@@ -155,4 +155,4 @@ def analyze_image(image_path):
 #     "https://portal.vision.cognitive.azure.com/dist/static/media/DenseCaptioningSample0.d3cd70fb.png"
 # )
 
-print(answer_question("what is the task id?", ""))
+# print(answer_question("what is the task id?", ""))

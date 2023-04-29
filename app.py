@@ -23,24 +23,17 @@ def main():
     st.write(speech)
     translatedspeech= s2t.translate_text(speech,"fr")
     st.write(translatedspeech)
-    q_name = "what is the name of the speaker?"
-    q_location = "where was the task done?"
-    q_task_name = "what is the name of the task?"
-    q_task_id = "what is the task id?"
-    q_finished  = "was the task finished successfully?"
-
-    q_process = "what is the process of the task?"
-
-
-    questions = [q_name, q_location, q_task_name, q_task_id, q_finished, q_process]
-    answers = dict()
-    i = 0
-    for question in questions :
-        answers[i] = s2t.answer_question(question, translatedspeech)
-        i += 1
-        
-    for k,v in answers.items():
-        st.write("{} : {}".format(k , v))
+    
+    q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
+    q_location = s2t.answer_question("where was the task done?", translatedspeech) 
+    q_task_name = s2t.answer_question("what is the name of the task?", translatedspeech) 
+    q_task_id = s2t.answer_question("what is the task id?", translatedspeech)
+    q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
+    q_process = s2t.answer_question("what is the process of the task?", translatedspeech)    
+    
+    st.write(q_task_name)
+    # st.write("what is the name of the speaker?")
+    # st.write(q_name)
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
