@@ -1,6 +1,5 @@
 import streamlit as st
 import tempfile
-from audio_recorder_streamlit import audio_recorder
 from PIL import Image
 import os
 import base64
@@ -16,11 +15,11 @@ def main():
     wav_audio_data = st_audiorec()
 
     if wav_audio_data is not None:
-    # display audio data as received on the backend
-        st.audio(wav_audio_data, format='audio/wav')
-    
-# INFO: by calling the function an instance of the audio recorder is created
-# INFO: once a recording is completed, audio data will be saved to wav_audio_data
+        # display audio data as received on the backend
+        st.audio(wav_audio_data, format="audio/wav")
+
+    # INFO: by calling the function an instance of the audio recorder is created
+    # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
     # Get user input
     text_input = st.text_input("Enter some text:")
@@ -30,8 +29,9 @@ def main():
     # Handle camera input
     if camera_input:
         st.write("Taking picture...")
-        image = take_picture()
-        st.image(image, caption="Taken picture", use_column_width=True)
+        image = st.camera_input(label="Click the camera button to take a picture")
+        if image is not None:
+            st.image(image, caption="Taken picture", use_column_width=True)
 
     # Handle file upload
     if file_input is not None:
@@ -44,10 +44,6 @@ def main():
         st.write("You entered:", text_input)
 
 
-def take_picture():
-    # TODO: Implement this function to take a picture using the user's camera and return the image
-    pass
-
-
-if __name__=='__main__':
+if __name__ == "__main__":
     main()
+
