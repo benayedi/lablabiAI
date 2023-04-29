@@ -84,9 +84,6 @@ def translate_text(
 def answer_question(question, context):
     """Asks a question and returns the answer."""
     
-    if context.strip() == "":
-        return ""
-    
     api_url = "https://fokzebi.cognitiveservices.azure.com/language/:query-text"
     api_key = "4caeb17bbddd400b84acc4b78e36371b"
 
@@ -109,14 +106,14 @@ def answer_question(question, context):
     return answers_list
 
 
-def analyze_image(url):
+def analyze_image(image_path):
     picapi_url = "https://aaazsd.cognitiveservices.azure.com/computervision/imageanalysis:analyze"
 
     pic_api_key = "bd95a01470fb40db990faa99a06b260e"
     """Analyzes an image and returns the dense captions."""
     # Set up the request parameters and headers
     headers = {
-        "Content-Type": "application/json",
+        "Content-Type": "application/octet-stream",
         "Ocp-Apim-Subscription-Key": pic_api_key,
     }
     params = {
@@ -125,10 +122,11 @@ def analyze_image(url):
         "language": "en",
         "gender-neutral-caption": "False",
     }
+    with open(image_path, "rb") as image_file:
+        image_bytes = image_file.read()
 
-    body = {"url": url}
-    request = requests.post(picapi_url, params=params, headers=headers, json=body)
-    response = request.json()
+    body = image_bytes
+    request = requests.post(picapi_url, params=params, headers=headers, data=body)
 
     data = json.loads(request.text)
     # Concatenate the text values

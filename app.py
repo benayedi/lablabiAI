@@ -34,10 +34,11 @@ def main():
 
     questions = [q_name, q_location, q_task_name, q_task_id, q_finished, q_process]
     answers = dict()
-
+    i = 0
     for question in questions :
-        answers[question] = s2t.answer_question(question, translatedspeech)
-
+        answers[i] = s2t.answer_question(question, translatedspeech)
+        i += 1
+        
     for k,v in answers.items():
         st.write("{} : {}".format(k , v))
     # INFO: by calling the function an instance of the audio recorder is created
