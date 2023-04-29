@@ -11,7 +11,7 @@ from st_custom_components import st_audiorec
 
 def main():
     st.title("Breaking down barriers")
-    st.write("Welcome to my simple web app!")
+    st.write("Please create a report")
     wav_audio_data = st_audiorec()
 
     if wav_audio_data is not None:
@@ -24,14 +24,28 @@ def main():
     # Get user input
     text_input = st.text_input("Enter some text:")
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])
-    camera_input = st.button("Take a picture")
+
+
+    camera_input = st.button("Open camera")
+    img_file_buffer = None
 
     # Handle camera input
-    if camera_input:
-        st.write("Taking picture...")
-        image = st.camera_input(label="Click the camera button to take a picture")
-        if image is not None:
-            st.image(image, caption="Taken picture", use_column_width=True)
+    #if camera_input:
+    st.write("Taking picture...")
+    img_file_buffer = st.camera_input("Take a picture")
+
+    # If an image was taken, display its type
+    if img_file_buffer is not None:
+        bytes_data = img_file_buffer.getvalue()
+        st.write(type(bytes_data))
+    else: 
+        st.write("none")
+
+
+
+
+
+   
 
     # Handle file upload
     if file_input is not None:
