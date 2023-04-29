@@ -75,7 +75,7 @@ print ("######## translated text ###########")
 print(translated_text)
 
 ##########################
-
+#  ---------------------------QUESTIONS ABOUT THE TEXT--------------------------------------
 # set up the API endpoint URL and authentication headers
 api_url = "https://fokzebi.cognitiveservices.azure.com/language/:query-text"
 api_key = "4caeb17bbddd400b84acc4b78e36371b"
@@ -101,15 +101,22 @@ print("########################")
 request = requests.post(api_url,params=params, headers=headers, json=body)
 # print(request.text)
 response = request.json
-data = request.text
+# data = request.text
+data = json.loads(request.text)
+# print(data)
 # check if the request was successful and print the answer if available
 results = []
-
+print("#############")
+answers_list = []
 for answer in data['answers']:
-    answer_span = answer['answerSpan']
-    if answer_span:
-        text = answer_span['text']
-        confidence = answer_span['confidenceScore']
-        results.append((text, confidence))
-        
-print(results)
+    if answer['answerSpan'] is not None:
+        text = answer['answerSpan']['text']
+        confidence_score = answer['answerSpan']['confidenceScore']
+        answers_list.append((text, confidence_score))
+
+print(answers_list)
+
+#  ---------------------------QUESTIONS ABOUT THE IMAGE--------------------------------------
+
+
+     
