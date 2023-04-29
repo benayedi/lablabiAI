@@ -117,6 +117,28 @@ for answer in data['answers']:
 print(answers_list)
 
 #  ---------------------------QUESTIONS ABOUT THE IMAGE--------------------------------------
+headers = {
+    # Request headers
+    'Content-Type': 'application/json',
+    'Ocp-Apim-Subscription-Key': 'bd95a01470fb40db990faa99a06b260e',
+}
+
+params = {
+    # Request parameters
+    'api-version' : '2023-02-01-preview',
+    'features': 'DenseCaptions',
+    'language': 'en',
+    'gender-neutral-caption': 'False'
+}
+body = {
+	"url": "https://portal.vision.cognitive.azure.com/dist/static/media/DenseCaptioningSample0.d3cd70fb.png"
+}
+picapi_url= "https://aaazsd.cognitiveservices.azure.com/computervision/imageanalysis:analyze"
+request = requests.post(picapi_url,params=params, headers=headers, json=body)
+response = request.json()
+data = json.loads(request.text)
+print(data)
+
 
 
      
