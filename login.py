@@ -1,7 +1,12 @@
 import streamlit as st
-from login import login_page, switch_page
-from employee import employee_page
-from employer import employer_page
+
+
+def login_page(switch_page):
+    st.title("Login Page")
+    account_type = st.radio("Choose account type:", ("Employer", "Employee"))
+    username = st.text_input("Enter your username:")
+    if st.button("Login"):
+        switch_page(account_type.lower(), username)
 
 
 def main():
@@ -15,6 +20,12 @@ def main():
         employee_page(session["username"])
     elif session["page_name"] == "employer":
         employer_page(session["username"])
+
+
+def switch_page(page_name: str, username: str):
+    session = st.session_state.setdefault("switch_page", {})
+    session["page_name"] = page_name
+    session["username"] = username.lower()
 
 
 if __name__ == "__main__":
