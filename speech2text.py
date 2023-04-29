@@ -137,7 +137,24 @@ picapi_url= "https://aaazsd.cognitiveservices.azure.com/computervision/imageanal
 request = requests.post(picapi_url,params=params, headers=headers, json=body)
 response = request.json()
 data = json.loads(request.text)
+# Concatenate the text values
+result = ''
+for value in data['denseCaptionsResult']['values']:
+    result += value['text'] + '\n'
+# Create a list of dictionaries with text, length, and confidence values
+array = []
+for value in data['denseCaptionsResult']['values']:
+    array.append({
+        'text': value['text'],
+        'length': len(value['text']),
+        'confidence': value['confidence']
+    })
+
+# Print the resulting array
+
 print(data)
+print(result)
+print(array)
 
 
 
