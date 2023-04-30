@@ -29,7 +29,9 @@ def main():
     st.write(translatedspeech)
     
     q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
-    q_location = s2t.answer_question("where was the task done?", translatedspeech) 
+    q_employer_id = s2t.answer_question("what is the speaker id?", translatedspeech)
+    q_location = s2t.answer_question("where was the task done?", translatedspeech)
+    q_date = s2t.answer_question("when was the task done?", translatedspeech) 
     q_task_name = s2t.answer_question("what is the name of the task?", translatedspeech) 
     q_task_id = s2t.answer_question("what is the task id?", translatedspeech)
     q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
@@ -80,8 +82,6 @@ def main():
     # Date
     date = st.date_input("Date:")
 
-    # Description
-    description = q_process
 
     # Media/Images
     #media_images = st.file_uploader("Media/Images:")
@@ -100,19 +100,21 @@ def main():
     c.setFont("Helvetica", 12)
     c.drawString(100, 680, "Name:")
     c.drawString(100, 660, "{}".format(q_name))
-    c.drawString(100, 640, "Location:")
-    c.drawString(100, 620, "{}".format(q_location))
+    c.drawString(100, 640, "Employee ID:")
+    c.drawString(100, 620, "{}".format(q_employer_id))
+    c.drawString(100, 600, "Location:")
+    c.drawString(100, 580, "{}".format(q_location))
     
     # Task Information
     c.setFont("Helvetica-Bold", 14)
-    c.drawString(100, 600, "Task Information")
+    c.drawString(100, 560, "Task Information")
     c.setFont("Helvetica", 12)
-    c.drawString(100, 580, "Task:")
-    c.drawString(100, 560, "{}".format(q_task_name))
-    c.drawString(100, 540, "TaskID:")
-    c.drawString(100, 520, "{}".format(q_task_id))
-    c.drawString(100, 500, "Description:")
-    c.drawString(100, 480, "{}".format(q_process))
+    c.drawString(100, 540, "Task:")
+    c.drawString(100, 520, "{}".format(q_task_name))
+    c.drawString(100, 500, "TaskID:")
+    c.drawString(100, 480, "{}".format(q_task_id))
+    c.drawString(100, 460, "Description:")
+    c.drawString(100, 440, "{}".format(q_process))
     c.showPage()
     c.save()
 
