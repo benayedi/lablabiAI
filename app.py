@@ -1,3 +1,4 @@
+import io
 import streamlit as st
 import tempfile
 from PIL import Image
@@ -9,25 +10,28 @@ import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
 import speech2text as s2t
 import wave 
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
 
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
     with open('output.wav', 'wb') as w:
-        
-        w.write(st_audiorec())
+        af =st_audiorec()
+        h= af is not None
+        if h:
+            w.write(af)
         w.close()
-    speech= s2t.speech_to_text("fr-FR", "output.wav")
-    st.write(speech)
+        if not h:
+            return
+        speech= s2t.speech_to_text("fr-FR", "output.wav")
+        st.write(speech)
+
     translatedspeech= s2t.translate_text(speech,"fr")
-    st.write(translatedspeech)
     
+    st.write(translatedspeech)
     q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
     q_employer_id = s2t.answer_question("what is the speaker id?", translatedspeech)
     q_location = s2t.answer_question("where was the task done?", translatedspeech)
@@ -37,14 +41,12 @@ def main():
     q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
     q_process = s2t.answer_question("what is the process of the task?", translatedspeech)    
     
-    st.write(q_task_name)
-    # st.write("what is the name of the speaker?")
-    # st.write(q_name)
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
     # Get user input
-    text_input = st.text_input("Enter some text:")
+    #text_input = st.text_input("Enter some text:")
+    
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])
 
     # taking photo with the camera functionality:
@@ -62,6 +64,8 @@ def main():
     if st.session_state.camera_enabled:
         st.write("Taking picture...")
         img_file_buffer = st.camera_input("Take a picture")
+        image_bytes = img_file_buffer.read()
+        st.write(s2t.analyze_image(image_bytes))
 
     # Display saved image
     if st.session_state.img_file_buffer is not None:
@@ -73,11 +77,12 @@ def main():
     if file_input is not None:
         st.write("Image uploaded!")
         image = Image.open(file_input)
+        with io.BytesIO() as output:
+            image.save(output, format= image.format)
+            image_bytes = output.getvalue()
+        st.write(s2t.analyze_image(image_bytes))
         st.image(image, caption="Uploaded image", use_column_width=True)
 
-    # Show user input
-    if text_input:
-        st.write("You entered:", text_input)
 
     # Date
     date = st.date_input("Date:")
@@ -118,6 +123,7 @@ def main():
     c.showPage()
     c.save()
 
+
     # Stream generated PDF to user
     def download_report():
         with open("employee_report.pdf", "rb") as f:
@@ -129,8 +135,8 @@ def main():
             mime="application/pdf",
         )
 
-
     download_report()
+
 
 if __name__ == "__main__":
     main()

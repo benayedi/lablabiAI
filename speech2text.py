@@ -106,7 +106,7 @@ def answer_question(question, context):
     return answers_list[0][0]
 
 
-def analyze_image(image_path):
+def analyze_image(image_bytes):
     picapi_url = "https://aaazsd.cognitiveservices.azure.com/computervision/imageanalysis:analyze"
 
     pic_api_key = "bd95a01470fb40db990faa99a06b260e"
@@ -122,8 +122,6 @@ def analyze_image(image_path):
         "language": "en",
         "gender-neutral-caption": "False",
     }
-    with open(image_path, "rb") as image_file:
-        image_bytes = image_file.read()
 
     body = image_bytes
     request = requests.post(picapi_url, params=params, headers=headers, data=body)
