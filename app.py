@@ -14,7 +14,6 @@ import speech2text as s2t
 import wave 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
-
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
@@ -32,12 +31,12 @@ def main():
     translatedspeech= s2t.translate_text(speech,"fr")
     
     st.write(translatedspeech)
-    q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
+    q_name = s2t.cohereqa("Extract the name of the speaker from this speech:", translatedspeech)
     q_employer_id = s2t.answer_question("what is the speaker id?", translatedspeech)
-    q_location = s2t.answer_question("where was the task done?", translatedspeech)
+    q_location = s2t.cohereqa("Extract the location from this speech:", translatedspeech) 
     q_date = s2t.answer_question("when was the task done?", translatedspeech) 
-    q_task_name = s2t.answer_question("what is the name of the task?", translatedspeech) 
-    q_task_id = s2t.answer_question("what is the task id?", translatedspeech)
+    q_task_name = s2t.cohereqa("Extract the name of the task from this speech:", translatedspeech) 
+    q_task_id = s2t.cohereqa("Extract the task id from this speech:", translatedspeech)
     q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
     q_process = s2t.answer_question("what is the process of the task?", translatedspeech)    
     

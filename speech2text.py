@@ -2,6 +2,7 @@ import requests
 import uuid
 import json
 import azure.cognitiveservices.speech as speechsdk
+import cohere
 
 
 # def recognize_speech():
@@ -79,7 +80,13 @@ def translate_text(
     translations = [item["translations"][0]["text"] for item in response_data]
 
     return translations[0]
-
+def cohereqa(question, context) : 
+    co = cohere.Client('Xsh1Qu7MfFeDg3Z6rfR0jYSNj2ju8OGG3OzvVma5')
+    response = co.generate(
+        prompt= question+"\"" + context+"\""+question + " from the worker speech", model="command-nightly", return_likelihoods="GENERATION"
+    )
+    
+    return (response[0])
 
 def answer_question(question, context):
     """Asks a question and returns the answer."""
