@@ -17,37 +17,31 @@ def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
     with open('output.wav', 'wb') as w:
-        
-        w.write(st_audiorec())
+        af =st_audiorec()
+        h= af is not None
+        if h:
+            w.write(af)
         w.close()
-    speech= s2t.speech_to_text("fr-FR", "output.wav")
-    st.write(speech)
+        if not h:
+            return
+        speech= s2t.speech_to_text("fr-FR", "output.wav")
+        st.write(speech)
+
     translatedspeech= s2t.translate_text(speech,"fr")
-    st.write(translatedspeech)
-    q_name = "what is the name of the speaker?"
-    q_location = "where was the task done?"
-    q_task_name = "what is the name of the task?"
-    q_task_id = "what is the task id?"
-    q_finished  = "was the task finished successfully?"
-
-    q_process = "what is the process of the task?"
-
-
-    questions = [q_name, q_location, q_task_name, q_task_id, q_finished, q_process]
-    answers = dict()
-
-    for question in questions :
-        answers[question] = s2t.answer_question(question, translatedspeech)
-
-    for k,v in answers.items():
-        st.write("{} : {}".format(k , v))
+    #st.write(translatedspeech)
+    q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
+    q_location = s2t.answer_question("where was the task done?", translatedspeech) 
+    q_task_name = s2t.answer_question("what is the name of the task?", translatedspeech) 
+    q_task_id = s2t.answer_question("what is the task id?", translatedspeech)
+    q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
+    q_process = s2t.answer_question("what is the process of the task?", translatedspeech)    
+    
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
-
-
     # Get user input
-    text_input = st.text_input("Enter some text:")
+    #text_input = st.text_input("Enter some text:")
+    
     file_input = st.file_uploader("Upload an image:", type=["jpg", "png"])
 
     # taking photo with the camera functionality:
