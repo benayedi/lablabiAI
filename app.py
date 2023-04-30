@@ -13,17 +13,31 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-
+import speech2text as s2t
+import wave 
 
 def main():
     st.title("Breaking down barriers")
     st.write("Please create a report")
-    wav_audio_data = st_audiorec()
-
-    if wav_audio_data is not None:
-        # display audio data as received on the backend
-        st.audio(wav_audio_data, format="audio/wav")
-
+    with open('output.wav', 'wb') as w:
+        
+        w.write(st_audiorec())
+        w.close()
+    speech= s2t.speech_to_text("fr-FR", "output.wav")
+    st.write(speech)
+    translatedspeech= s2t.translate_text(speech,"fr")
+    st.write(translatedspeech)
+    
+    q_name = s2t.answer_question("what is the name of the speaker?", translatedspeech)
+    q_location = s2t.answer_question("where was the task done?", translatedspeech) 
+    q_task_name = s2t.answer_question("what is the name of the task?", translatedspeech) 
+    q_task_id = s2t.answer_question("what is the task id?", translatedspeech)
+    q_finished  = s2t.answer_question("was the task finished successfully?", translatedspeech)
+    q_process = s2t.answer_question("what is the process of the task?", translatedspeech)    
+    
+    st.write(q_task_name)
+    # st.write("what is the name of the speaker?")
+    # st.write(q_name)
     # INFO: by calling the function an instance of the audio recorder is created
     # INFO: once a recording is completed, audio data will be saved to wav_audio_data
 
@@ -63,24 +77,22 @@ def main():
     if text_input:
         st.write("You entered:", text_input)
     # Employee name
-    employee_name = st.text_input("Employee Name:")
+    employee_name = q_name
 
     # Location
-    location = st.text_input("Location:")
+    location = q_location
 
     # Task
-    task = st.text_input("Task:")
+    task = q_task_name
 
     # Task Finished
-    task_finished = st.radio("Task Finished:", options=["Yes", "No"])
+    task_finished = q_finished
 
     # Date
     date = st.date_input("Date:")
 
     # Description
-    description = []
-    for i in range(2):
-        description.append(st.text_input(f"Description {i+1}:"))
+    description = q_process
 
     # Media/Images
     #media_images = st.file_uploader("Media/Images:")
@@ -97,21 +109,17 @@ def main():
     c.setFont("Helvetica-Bold", 14)
     c.drawString(100, 700, "Emplyee name:")
     c.setFont("Helvetica", 12)
-    c.drawString(100, 680, "{employee_name}")
+    c.drawString(100, 680, "{}".format(q_name))
     c.drawString(100, 660, "Location:")
-    c.drawString(100, 640, "{location}")
+    c.drawString(100, 640, "{}".format(q_location))
     
     # Task Information
     c.setFont("Helvetica-Bold", 14)
     c.drawString(100, 620, "Task Information")
     c.setFont("Helvetica", 12)
     c.drawString(100, 600, "Task:")
-    c.drawString(100, 580, "{task}")
-    c.drawString(100, 560, "Date:")
-    c.drawString(100, 540, "{date}")
-    c.drawString(100, 520, "Description:")
-    for i, text in enumerate(description):
-        c.drawString(100, 500 - i * 20, f"{i+1}. {text}")
+    c.drawString(100, 580, "{}".format(q_task_name))
+
     c.showPage()
     c.save()
 
