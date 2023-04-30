@@ -76,17 +76,6 @@ def main():
     # Show user input
     if text_input:
         st.write("You entered:", text_input)
-    # Employee name
-    employee_name = q_name
-
-    # Location
-    location = q_location
-
-    # Task
-    task = q_task_name
-
-    # Task Finished
-    task_finished = q_finished
 
     # Date
     date = st.date_input("Date:")
@@ -107,19 +96,23 @@ def main():
     c.drawString(title_x, title_y, "Employee Report: Task Completion")
     # Employee Information
     c.setFont("Helvetica-Bold", 14)
-    c.drawString(100, 700, "Emplyee name:")
+    c.drawString(100, 700, "Employee Information:")
     c.setFont("Helvetica", 12)
-    c.drawString(100, 680, "{}".format(q_name))
-    c.drawString(100, 660, "Location:")
-    c.drawString(100, 640, "{}".format(q_location))
+    c.drawString(100, 680, "Name:")
+    c.drawString(100, 660, "{}".format(q_name))
+    c.drawString(100, 640, "Location:")
+    c.drawString(100, 620, "{}".format(q_location))
     
     # Task Information
     c.setFont("Helvetica-Bold", 14)
-    c.drawString(100, 620, "Task Information")
+    c.drawString(100, 600, "Task Information")
     c.setFont("Helvetica", 12)
-    c.drawString(100, 600, "Task:")
-    c.drawString(100, 580, "{}".format(q_task_name))
-
+    c.drawString(100, 580, "Task:")
+    c.drawString(100, 560, "{}".format(q_task_name))
+    c.drawString(100, 540, "TaskID:")
+    c.drawString(100, 520, "{}".format(q_task_id))
+    c.drawString(100, 500, "Description:")
+    c.drawString(100, 480, "{}".format(q_process))
     c.showPage()
     c.save()
 
