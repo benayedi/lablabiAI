@@ -9,6 +9,10 @@ import streamlit.components.v1 as components
 from st_custom_components import st_audiorec
 from reportlab.pdfgen import canvas
 from PyPDF2 import PdfFileMerger
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
 import speech2text as s2t
 import wave 
 
@@ -72,35 +76,66 @@ def main():
     # Show user input
     if text_input:
         st.write("You entered:", text_input)
+    # Employee name
+    employee_name = q_name
 
-    pdf = canvas.Canvas("report.pdf")
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(100, 750, "Report")
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(100, 700, "Emplyee name:")
-    pdf.drawString(100, 680, "Location:")
-    pdf.drawString(100, 660, "Task:")
-    pdf.drawString(100, 640, "Task finished:")
-    pdf.drawString(100, 620, "Date:")
-    pdf.drawString(100, 600, "Description:")
-    pdf.drawString(100, 580, "Image:")
-    pdf.drawString(120, 560, text_input)
-    pdf.showPage()
-    pdf.save()
+    # Location
+    location = q_location
+
+    # Task
+    task = q_task_name
+
+    # Task Finished
+    task_finished = q_finished
+
+    # Date
+    date = st.date_input("Date:")
+
+    # Description
+    description = q_process
+
+    # Media/Images
+    #media_images = st.file_uploader("Media/Images:")
+
+    # Generate PDF report using ReportLab
+    c = canvas.Canvas("employee_report.pdf", pagesize=letter)
+    # Set the font size and position of the title
+    c.setFont("Helvetica-Bold", 16)
+    title_x, title_y = 1*inch, 10.5*inch
+
+    # Draw the title on the first page
+    c.drawString(title_x, title_y, "Employee Report: Task Completion")
+    # Employee Information
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, 700, "Emplyee name:")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 680, "{}".format(q_name))
+    c.drawString(100, 660, "Location:")
+    c.drawString(100, 640, "{}".format(q_location))
+    
+    # Task Information
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, 620, "Task Information")
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 600, "Task:")
+    c.drawString(100, 580, "{}".format(q_task_name))
+
+    c.showPage()
+    c.save()
 
     # Stream generated PDF to user
     def download_report():
-        with open("report.pdf", "rb") as f:
+        with open("employee_report.pdf", "rb") as f:
             data = f.read()
         st.download_button(
             label="Download Report",
             data=data,
-            file_name="report.pdf",
+            file_name="employee_report.pdf",
             mime="application/pdf",
         )
 
-    download_report()
 
+    download_report()
 
 if __name__ == "__main__":
     main()
